@@ -1,0 +1,44 @@
+variables:
+  JSON_RESPONSE: '{"aval":0,"id":2,"nome":"avalanche"},{"aval":0,"id":1,"nome":"drive[[:space:]]my[[:space:]]car"},{"aval":0,"id":0,"nome":"ziriguidum"}'
+
+stages:
+  - build
+  - test
+
+build:
+  stage: build
+  image: python:3.9
+  script:
+  - pip install -r requirements.txt
+
+ping pong:
+  stage: test
+  image: python:3.9
+
+  script:
+    - pip install -r requirements.txt
+    - python -m src.main & 
+    - sleep 20
+    - curl http:/localhost:8080/ping | grep "pong"
+
+testa ordenacao:
+
+  stage: test
+  image: python:3.9
+  script:
+    - pip install -r requirements.txt
+    - python -m src.main & 
+    - sleep 20
+    - curl -X PUT -H "Content-Type:application/json" -d '{"nome":"Ziriguidum"}' http://localhost:8080/cadastrar
+    - curl -X PUT -H "Content-Type:application/json" -d '{"nome":"Drive My Car"}' http://localhost:8080/cadastrar
+    - curl -X PUT -H "Content-Type:application/json" -d '{"nome":"Avalanche"}' http://localhost:8080/cadastrar 
+    - curl http:/localhost:8080/listar | grep $JSON_RESPONSE
+
+cadastra musica:
+  stage: test
+  image: python:3.9
+  script:
+    - pip install -r requirements.txt
+    - python -m src.main & 
+    - sleep 20
+    - curl -X PUT -H "Content-Type:application/json" -d '{"nome":"Drive My Car"}' http://localhost:8080/cadastrar | grep '"aval":0'

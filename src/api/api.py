@@ -56,4 +56,4 @@ def avaliar():
 
 def run():
     print(f'API {config.API_NAME} rodando na porta {config.PORT}...')
-    app.run(host='0.0.0.0', port="8080")
+    app.run(host='0.0.0.0', port="3000")
